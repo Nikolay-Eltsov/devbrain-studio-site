@@ -24,7 +24,21 @@ git -C site push
 `_worker.js` разводит поддомены по папкам внутри одного проекта — поэтому новый
 продукт не требует ни нового проекта Pages, ни новой записи DNS.
 
-## Настройка проекта Pages
+## Раскладка репозитория
 
-Build command — пусто. Output directory — `/`.
+| Файл | Что это |
+|---|---|
+| `wrangler.jsonc` | Конфиг: `main` — роутер, `assets.directory` — папка статики. |
+| `worker.js` | Роутер: поддомен → папка. Лежит **вне** `public/`. |
+| `public/` | Всё, что раздаётся наружу: витрина и папки продуктов. |
+
+`worker.js` вне `public/` не по вкусу, а по необходимости: файл внутри папки
+ассетов раздаётся наружу как обычная статика, и серверный код там оказаться не
+должен. Именно на это ругается wrangler ошибкой
+«Uploading a Pages `_worker.js` file as an asset».
+
+## Настройка проекта
+
+Тип — Worker (Workers Builds). Build command — пусто.
+Deploy command — `npx wrangler deploy`. Root directory — `/`.
 Custom domains: `devbrain.studio` и `*.devbrain.studio`.

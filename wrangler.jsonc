@@ -1,0 +1,15 @@
+{
+  // Витрина devbrain.studio. Worker + статические ассеты.
+  //
+  // Ключевое: `worker.js` лежит ВНЕ `public/`. Роутер, положенный внутрь папки
+  // ассетов, был бы отдан наружу как обычный файл — именно на это wrangler и
+  // ругается ошибкой «Uploading a Pages _worker.js file as an asset».
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "devbrain-studio-site",
+  "main": "worker.js",
+  "compatibility_date": "2026-01-01",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  }
+}
