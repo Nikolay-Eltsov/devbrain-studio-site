@@ -35,13 +35,32 @@ export default {
       // кириллические имена продуктом не считаются. Кириллица сюда приходит
       // уже в punycode (`xn--…`) и на этом правиле честно отсекается.
       if (SLUG.test(slug) && !slug.startsWith('xn--')) {
-        url.pathname = `/${slug}${url.pathname}`;
+        const prefix = `/${slug}`;
+        url.pathname = `${prefix}${url.pathname}`;
         const res = await env.ASSETS.fetch(new Request(url, request));
 
         // Неизвестный поддомен НЕ показывает витрину под своим именем:
         // иначе одна и та же страница индексируется на бесконечном числе
         // хостов, и поиск считает это дублями.
         if (res.status === 404) return toApex();
+
+        // html_handling: "auto-trailing-slash" (по умолчанию) сам решает
+        // редиректить /x.html → /x или /папка/ → /папка/index.html. Такой
+        // редирект отдаётся ассетами относительно УЖЕ переписанного пути
+        // (с префиксом slug), а браузер, всё ещё стоя на поддомене продукта,
+        // применит его как есть — и воркер на следующем заходе подставит
+        // slug ещё раз (`/slug/slug/...`) → 404 → редирект на апекс. Снимаем
+        // префикс с Location, чтобы редирект остался внутри поддомена.
+        if (res.status >= 300 && res.status < 400) {
+          const location = res.headers.get('location');
+          if (location && (location === prefix || location.startsWith(`${prefix}/`))) {
+            const stripped = location.slice(prefix.length) || '/';
+            const headers = new Headers(res.headers);
+            headers.set('location', stripped);
+            return new Response(res.body, { status: res.status, statusText: res.statusText, headers });
+          }
+        }
+
         return res;
       }
     }
