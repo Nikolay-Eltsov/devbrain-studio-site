@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Дымовой тест маршрутизации</title>
+<meta name="description" content="Временный продукт, проверяющий что поддомен продукта действительно отдаёт его страницу, а не витрину.">
+<link rel="canonical" href="https://smoketest.devbrain.studio/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Дымовой тест маршрутизации">
+<meta property="og:description" content="Временный продукт, проверяющий что поддомен продукта действительно отдаёт его страницу, а не витрину.">
+<meta property="og:image" content="./og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="./favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+<main class="wrap">
+  <h1>Дымовой тест</h1>
+  <p class="lead">Временный продукт: проверяет маршрутизацию.</p>
+
+  <!-- Поля собираются из product.json:inputs. Разметку генерирует app.js,
+       чтобы поле и его id никогда не расходились с манифестом и кейсами. -->
+  <form id="form" class="card" autocomplete="off"></form>
+
+  <output id="out" class="result" aria-live="polite"></output>
+
+  <div class="actions">
+    <button type="button" id="share" class="ghost" hidden>Скопировать ссылку с расчётом</button>
+  </div>
+
+  <!-- Текст под калькулятором — то, что индексируется. Без него страница
+       для поиска пустая: у калькулятора нет собственного контента. -->
+  <section class="prose">
+    <h2>Как это считается</h2>
+    <p>Складывает два числа. Больше ничего.</p>
+
+    <h2>Частые вопросы</h2>
+    <details><summary>Зачем это нужно?</summary><p>Ни за чем, это проверка.</p></details>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  <p>DevBrain Studio · <a href="./privacy.html">Данные никуда не уходят</a></p>
+</footer>
+
+<script type="module" src="./app.js"></script>
+</body>
+</html>
