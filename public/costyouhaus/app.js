@@ -31,8 +31,17 @@ for (const f of manifest.inputs) {
       input.append(o);
     }
   } else {
-    input.type = f.type ?? 'number';
-    if (input.type === 'number') { input.inputMode = 'decimal'; input.step = f.step ?? 'any'; }
+    // HTML не знает type="integer" — браузер откатывает его к текстовому
+    // полю без цифровой клавиатуры на телефоне. Поэтому "integer" из
+    // манифеста рендерим как <input type="number"> с шагом 1 и
+    // inputmode="numeric" (без точки на клавиатуре); дробные "number" —
+    // с inputmode="decimal" (О12: оба режима на всех шести полях).
+    const isInteger = f.type === 'integer';
+    input.type = isInteger || f.type == null || f.type === 'number' ? 'number' : f.type;
+    if (input.type === 'number') {
+      input.inputMode = isInteger ? 'numeric' : 'decimal';
+      input.step = f.step ?? (isInteger ? '1' : 'any');
+    }
     if (f.placeholder) input.placeholder = f.placeholder;
   }
   input.value = params.get(f.id) ?? String(f.default ?? '');
@@ -43,11 +52,17 @@ for (const f of manifest.inputs) {
 }
 
 // ── Пересчёт ─────────────────────────────────────────────────────────────────
+/** "number" и "integer" — оба числовые поля манифеста; отличаются только
+ * HTML-атрибутами ввода (см. цикл рендера полей выше), не парсингом. */
+function isNumeric(f) {
+  return f.type == null || f.type === 'number' || f.type === 'integer';
+}
+
 function read() {
   const data = {};
   for (const f of manifest.inputs) {
     const el = form.elements[f.id];
-    data[f.id] = f.type === 'number' || f.type == null ? Number(el.value) : el.value;
+    data[f.id] = isNumeric(f) ? Number(el.value) : el.value;
   }
   return data;
 }
@@ -59,11 +74,17 @@ function firstBadField() {
     const el = form.elements[f.id];
     const raw = String(el.value ?? '').trim();
     if (raw === '') return { f, why: 'не заполнено' };
-    if ((f.type ?? 'number') === 'number' && !Number.isFinite(Number(raw))) {
+    if (isNumeric(f) && !Number.isFinite(Number(raw))) {
       return { f, why: 'не число' };
     }
-    if ((f.type ?? 'number') === 'number' && f.min != null && Number(raw) < f.min) {
+    if (isNumeric(f) && f.type === 'integer' && !Number.isInteger(Number(raw))) {
+      return { f, why: 'должно быть целым' };
+    }
+    if (isNumeric(f) && f.min != null && Number(raw) < f.min) {
       return { f, why: `меньше ${f.min}` };
+    }
+    if (isNumeric(f) && f.max != null && Number(raw) > f.max) {
+      return { f, why: `больше ${f.max}` };
     }
   }
   return null;
@@ -118,6 +139,12 @@ function render() {
     shareBtn.hidden = false;
     shareBtn.dataset.url = url.toString();
   }
+
+  // О12: результат виден без скролла сразу после расчёта. 'nearest' — не
+  // прыгает, если результат уже в кадре, и не дёргает страницу на каждое
+  // нажатие клавиши, когда он там и остался; сработает только когда после
+  // заполнения формы результат оказался ниже видимой области.
+  out.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
 }
 
 // ── Примеры из кейсов ────────────────────────────────────────────────────────
@@ -131,7 +158,6 @@ for (const c of manifest.cases ?? []) {
       if (form.elements[id]) form.elements[id].value = String(v);
     }
     render();
-    out.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   });
   examplesBox.append(b);
 }
