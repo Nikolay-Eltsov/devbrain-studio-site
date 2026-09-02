@@ -1,0 +1,290 @@
+{
+  "slug": "costyouhaus",
+  "name": "Сколько стоит ваш час",
+  "tagline": "Из желаемого дохода, отпуска и расходов считает честную ставку. Больше не соглашаетесь на первую названную цифру.",
+  "category": "Калькуляторы и конвертеры",
+  "money": "донат",
+  "effort": "вечер",
+  "lang": "ru",
+  "seo": {
+    "title": "Калькулятор часовой ставки фрилансера",
+    "description": "Посчитайте честную ставку в час: введите годовой доход, часы в неделю, отпуск, налог и расходы — калькулятор покажет цифру для переговоров с заказчиком.",
+    "keywords": [
+      "калькулятор часовой ставки фрилансера",
+      "как посчитать часовую ставку",
+      "сколько брать за час фрилансеру",
+      "почасовая ставка от годового дохода"
+    ]
+  },
+  "inputs": [
+    {
+      "id": "annualIncome",
+      "label": "Желаемый доход за год (на руки)",
+      "short": "Доход в год",
+      "group": "Доход и расходы",
+      "type": "number",
+      "unit": "¤/год",
+      "min": 0,
+      "max": 100000000,
+      "step": 1000,
+      "default": 0,
+      "required": true,
+      "control": "field",
+      "whatIf": 5000
+    },
+    {
+      "id": "taxPercent",
+      "label": "Налог, % от дохода",
+      "short": "Налог",
+      "group": "Доход и расходы",
+      "type": "number",
+      "unit": "%",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "default": 0,
+      "required": true,
+      "control": "slider",
+      "whatIf": 5,
+      "presets": [
+        {
+          "label": "Россия, самозанятый — доход от физлиц, 4%",
+          "value": 4,
+          "note": "НК РФ гл. 32, данные на 2026 год"
+        },
+        {
+          "label": "Россия, самозанятый — доход от ИП/юрлиц, 6%",
+          "value": 6,
+          "note": "НК РФ гл. 32, данные на 2026 год"
+        },
+        {
+          "label": "Грузия, малый бизнес — 1% (до 500 000 GEL/год)",
+          "value": 1,
+          "note": "Налоговый кодекс Грузии ст. 88, 90, данные на 2026 год"
+        },
+        {
+          "label": "Казахстан, спецрежим для ИП — 4%",
+          "value": 4,
+          "note": "данные на 2026 год, отдельные регионы — до 2%"
+        },
+        {
+          "label": "Армения, налог с оборота — от 1% (диапазон 1–12%)",
+          "value": 1,
+          "note": "данные низкой уверенности, точная ставка зависит от вида деятельности, 2026 год"
+        }
+      ]
+    },
+    {
+      "id": "otherExpenses",
+      "label": "Прочие расходы за год (софт, подписки, оборудование, связь)",
+      "short": "Прочие расходы",
+      "group": "Доход и расходы",
+      "type": "number",
+      "unit": "¤/год",
+      "min": 0,
+      "max": 10000000,
+      "step": 100,
+      "default": 0,
+      "required": true,
+      "control": "field",
+      "whatIf": 2000
+    },
+    {
+      "id": "hoursPerWeek",
+      "label": "Рабочих часов в неделю",
+      "short": "Часов в неделю",
+      "group": "Время",
+      "type": "number",
+      "unit": "ч/нед",
+      "min": 1,
+      "max": 80,
+      "step": 1,
+      "default": 40,
+      "required": true,
+      "control": "slider",
+      "whatIf": 5
+    },
+    {
+      "id": "vacationDays",
+      "label": "Отпуск, дней в году",
+      "short": "Отпуск",
+      "group": "Время",
+      "type": "integer",
+      "unit": "дн/год",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "default": 28,
+      "required": true,
+      "control": "slider",
+      "whatIf": 5,
+      "presets": [
+        {
+          "label": "Россия — 28 дней",
+          "value": 28,
+          "note": "ст. 115 ТК РФ, данные на 2026 год"
+        },
+        {
+          "label": "Грузия — 24 дня",
+          "value": 24,
+          "note": "Трудовой кодекс Грузии, данные на 2026 год"
+        },
+        {
+          "label": "Казахстан — 24 дня",
+          "value": 24,
+          "note": "ст. 101 ТК РК, данные на 2026 год"
+        },
+        {
+          "label": "Армения — 28 дней",
+          "value": 28,
+          "note": "≈20 рабочих дней при 5-дневной неделе, Трудовой кодекс РА, данные на 2026 год"
+        },
+        {
+          "label": "ЕС — минимум 28 дней",
+          "value": 28,
+          "note": "минимум 20 рабочих дней по директиве 2003/88/EC, отдельные страны — больше"
+        }
+      ]
+    },
+    {
+      "id": "nonBillablePercent",
+      "label": "Непродаваемое время, % (поиск клиентов, админка)",
+      "short": "Непродаваемое время",
+      "group": "Время",
+      "type": "number",
+      "unit": "%",
+      "min": 0,
+      "max": 90,
+      "step": 1,
+      "default": 40,
+      "required": true,
+      "control": "slider",
+      "whatIf": 10,
+      "presets": [
+        {
+          "label": "Соло-фрилансер — 40% (загрузка 50–70%)",
+          "value": 40,
+          "note": "обзоры Harvest, Scoro, SPI Research — ориентир, не точное измерение"
+        },
+        {
+          "label": "Агентство/консалтинг — 20% (загрузка 70–85%)",
+          "value": 20,
+          "note": "те же обзоры, для команды ниже, чем у соло-фрилансера"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "id": "hourlyRate",
+      "label": "Ваша часовая ставка",
+      "unit": "¤/час",
+      "role": "hero"
+    },
+    {
+      "id": "billableHoursPerYear",
+      "label": "Часов вы реально продаёте в год",
+      "unit": "ч/год",
+      "role": "secondary"
+    },
+    {
+      "id": "requiredRevenue",
+      "label": "Сколько нужно заработать за год до вычета налога",
+      "unit": "¤/год",
+      "role": "secondary"
+    }
+  ],
+  "cases": [
+    {
+      "name": "UC1 — Тбилиси, фронтендер-релокант, малый бизнес Грузии 1%",
+      "input": {
+        "annualIncome": 24000,
+        "taxPercent": 1,
+        "otherExpenses": 3000,
+        "hoursPerWeek": 35,
+        "vacationDays": 24,
+        "nonBillablePercent": 40
+      },
+      "expect": {
+        "billableHoursPerYear": 1020,
+        "requiredRevenue": 27272.73,
+        "hourlyRate": 26.74
+      },
+      "tolerance": 0.01
+    },
+    {
+      "name": "UC5 — Москва, вчерашний штатный сотрудник ушёл на фриланс",
+      "input": {
+        "annualIncome": 2400000,
+        "taxPercent": 6,
+        "otherExpenses": 120000,
+        "hoursPerWeek": 40,
+        "vacationDays": 28,
+        "nonBillablePercent": 35
+      },
+      "expect": {
+        "billableHoursPerYear": 1248,
+        "requiredRevenue": 2680851.06,
+        "hourlyRate": 2148.12
+      },
+      "tolerance": 0.01
+    },
+    {
+      "name": "UC14/UC28 — сезонная работа (фотограф/разработчик), доход считается за год",
+      "input": {
+        "annualIncome": 1500000,
+        "taxPercent": 4,
+        "otherExpenses": 60000,
+        "hoursPerWeek": 30,
+        "vacationDays": 20,
+        "nonBillablePercent": 45
+      },
+      "expect": {
+        "billableHoursPerYear": 810.86,
+        "requiredRevenue": 1625000,
+        "hourlyRate": 2004.05
+      },
+      "tolerance": 0.01
+    }
+  ],
+  "share": {
+    "enabled": true,
+    "card": true,
+    "template": "Моя часовая ставка посчитана с учётом отпуска, простоя и расходов — не наугад."
+  },
+  "links": {
+    "repo": "",
+    "web": "https://costyouhaus.devbrain.studio/"
+  },
+  "currency": {
+    "default": "EUR",
+    "options": [
+      {
+        "code": "EUR",
+        "sign": "€"
+      },
+      {
+        "code": "USD",
+        "sign": "$"
+      },
+      {
+        "code": "RUB",
+        "sign": "₽"
+      },
+      {
+        "code": "PLN",
+        "sign": "zł"
+      },
+      {
+        "code": "TRY",
+        "sign": "₺"
+      },
+      {
+        "code": "UAH",
+        "sign": "₴"
+      }
+    ]
+  },
+  "catalogNumber": 2,
+  "stack": "Одна страница"
+}
