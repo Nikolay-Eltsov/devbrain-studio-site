@@ -1,0 +1,158 @@
+{
+  "slug": "costyouhaus",
+  "name": "Сколько стоит ваш час",
+  "tagline": "Из дохода, расходов, часов и отпуска считает честную ставку — чтобы сразу ответить, когда спросят «сколько стоит час».",
+  "category": "Калькуляторы и конвертеры",
+  "money": "донат после результата (необязательно, от 290 ₽)",
+  "effort": "вечер",
+  "lang": "ru",
+  "seo": {
+    "title": "Сколько стоит ваш час — калькулятор фрилансера",
+    "description": "Введите доход, расходы, часы и отпуск — посчитаете честную почасовую ставку и сразу ответите заказчику в чате, без регистрации.",
+    "keywords": [
+      "почасовая ставка фрилансера",
+      "калькулятор ставки для фрилансера",
+      "сколько стоит час работы",
+      "как посчитать ставку фрилансеру"
+    ]
+  },
+  "inputs": [
+    {
+      "id": "income",
+      "label": "Желаемый доход в месяц",
+      "short": "доход",
+      "unit": "₽/мес",
+      "type": "number",
+      "group": "Сколько хотите зарабатывать",
+      "control": "field",
+      "min": 1,
+      "max": 10000000,
+      "step": 1000,
+      "default": 100000,
+      "required": true,
+      "whatIf": 10000
+    },
+    {
+      "id": "expenses",
+      "label": "Обязательные расходы в месяц (инструменты, подписки, налоги)",
+      "short": "расходы",
+      "unit": "₽/мес",
+      "type": "number",
+      "group": "Сколько хотите зарабатывать",
+      "control": "field",
+      "min": 0,
+      "max": 10000000,
+      "step": 1000,
+      "default": 20000,
+      "required": true,
+      "whatIf": 5000
+    },
+    {
+      "id": "hoursPerWeek",
+      "label": "Часы работы в неделю",
+      "short": "часов в неделю",
+      "unit": "часов/нед",
+      "type": "number",
+      "group": "Сколько готовы работать",
+      "control": "slider",
+      "min": 1,
+      "max": 80,
+      "step": 1,
+      "default": 30,
+      "required": true,
+      "whatIf": 5
+    },
+    {
+      "id": "vacationWeeks",
+      "label": "Недели отпуска в году",
+      "short": "недель отпуска",
+      "unit": "недель/год",
+      "type": "integer",
+      "group": "Сколько готовы работать",
+      "control": "slider",
+      "min": 0,
+      "max": 51,
+      "step": 1,
+      "default": 4,
+      "required": true,
+      "whatIf": 1
+    }
+  ],
+  "outputs": [
+    {
+      "id": "rate",
+      "label": "Час стоит",
+      "unit": "₽/час",
+      "role": "hero"
+    },
+    {
+      "id": "yearlyNeed",
+      "label": "Нужно заработать за год",
+      "unit": "₽/год",
+      "role": "detail"
+    },
+    {
+      "id": "paidHoursPerYear",
+      "label": "Оплачиваемых часов в год",
+      "unit": "часов/год",
+      "role": "detail"
+    }
+  ],
+  "cases": [
+    {
+      "name": "Фрилансер после первого счёта",
+      "input": {
+        "income": 150000,
+        "expenses": 30000,
+        "hoursPerWeek": 30,
+        "vacationWeeks": 4
+      },
+      "expect": {
+        "rate": 1500,
+        "yearlyNeed": 2160000,
+        "paidHoursPerYear": 1440
+      }
+    },
+    {
+      "name": "Неполная занятость, короткий отпуск",
+      "input": {
+        "income": 80000,
+        "expenses": 15000,
+        "hoursPerWeek": 20,
+        "vacationWeeks": 2
+      },
+      "expect": {
+        "rate": 1140,
+        "yearlyNeed": 1140000,
+        "paidHoursPerYear": 1000
+      }
+    },
+    {
+      "name": "Расходы съели весь доход",
+      "input": {
+        "income": 50000,
+        "expenses": 50000,
+        "hoursPerWeek": 30,
+        "vacationWeeks": 4
+      },
+      "expect": {
+        "rate": null
+      }
+    }
+  ],
+  "share": {
+    "enabled": true,
+    "card": true,
+    "template": "Посчитал свою почасовую ставку — теперь есть что ответить, когда спрашивают «сколько стоит час»."
+  },
+  "links": {
+    "repo": "",
+    "web": "https://costyouhaus.devbrain.studio/"
+  },
+  "mobile": {
+    "inShell": false,
+    "screen": "mobile/tool.dart"
+  },
+  "catalogNumber": 2,
+  "stack": "Одна страница"
+}
